@@ -1,0 +1,11 @@
+<library path="lib/libpr2_gripper_perception_module">
+
+  <class type="owds::Pr2GripperPerceptionModule" base_class_type="owds::PerceptionModuleBase_<owds::Object>">
+    <description>
+      An object perception module using the Pr2 pressure sensors.
+      Possible parameters are: side (0 left / 1 right),
+      pressure_threshold, distance_threshold, min_period.
+    </description>
+  </class>
+
+</library>

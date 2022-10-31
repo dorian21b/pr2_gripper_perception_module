@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>pr2_gripper_perception_module</name>
+  <version>0.0.1</version>
+  <description>The pr2_gripper_perception_module package</description>
+
+  <maintainer email="gsarthou@laas.fr">Guillaume Sarthou</maintainer>
+  <author email="gsarthou@laas.fr">Guillaume Sarthou</author>
+
+  <license>LGPLv2</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>overworld</build_depend>
+  <build_depend>pluginlib</build_depend>
+  <build_depend>pr2_msgs</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_export_depend>overworld</build_export_depend>
+  <build_export_depend>pluginlib</build_export_depend>
+  <build_export_depend>pr2_msgs</build_export_depend>
+  <build_export_depend>roscpp</build_export_depend>
+  <exec_depend>overworld</exec_depend>
+  <exec_depend>pluginlib</exec_depend>
+  <exec_depend>pr2_msgs</exec_depend>
+  <exec_depend>roscpp</exec_depend>
+
+
+  <export>
+    <overworld plugin="${prefix}/modules_plugins.xml" />
+  </export>
+</package>
