@@ -37,8 +37,8 @@ private:
   double right_tip_pressure_prev_;
 
   bool has_picked_;
-  size_t obj_id_;
-  std::string current_obj_id_;
+  size_t prc_obj_id_;
+  std::string current_prc_obj_id_;
 
   double pressure_threshold_;
   double distance_threshold_;

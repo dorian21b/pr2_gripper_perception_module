@@ -22,7 +22,7 @@ Pr2GripperPerceptionModule::Pr2GripperPerceptionModule() : PerceptionModuleRosBa
   right_tip_pressure_prev_ = 0;
 
   has_picked_ = false;
-  obj_id_ = 0;
+  prc_obj_id_ = 0;
 
   pressure_threshold_ = 800;
   distance_threshold_ = 0.03;
@@ -105,16 +105,16 @@ bool Pr2GripperPerceptionModule::perceptionCallback(const pr2_msgs::PressureStat
         if(dist >= distance_threshold_)
         {
           if(side_ == PR2_GRIPPER_LEFT)
-            current_obj_id_ = "obj_pr2_gripper_left_" + std::to_string(obj_id_);
+            current_prc_obj_id_ = "prc_obj_pr2_gripper_left_" + std::to_string(prc_obj_id_);
           else
-            current_obj_id_ = "obj_pr2_gripper_right_" + std::to_string(obj_id_);
+            current_prc_obj_id_ = "prc_obj_pr2_gripper_right_" + std::to_string(prc_obj_id_);
 
-          Object percept(current_obj_id_, false);
+          Percept<Object> percept(current_prc_obj_id_, false);
           Shape_t shape;
           shape.type = SHAPE_CUBE;
           shape.scale.fill(dist);
           percept.setShape(shape);
-          // we can not take the mass from the ontology since the object does not exist in (fake id)
+          // we can not take the mass from the ontology since the percept object does not exist in (fake id)
           percept.setSeen();
 
           percepts_.insert(std::make_pair(percept.id(), percept));
@@ -123,16 +123,16 @@ bool Pr2GripperPerceptionModule::perceptionCallback(const pr2_msgs::PressureStat
           {
             if(robot_agent_->getLeftHand() != nullptr)
             {
-              percepts_.at(percept.id()).updatePose(robot_agent_->getLeftHand()->pose());
-              percepts_.at(percept.id()).setInHand(robot_agent_->getLeftHand());
+              percepts_.at(percept.id()).updatePose(robot_agent_->getLeftHand()->pose()); // TODO change into transform between hand and prc_obj (i.e. pose of obj in hand frame) <= robot_agent_->getLeftHand()->pose()
+              robot_agent_->getLeftHand()->putPerceptInHand(&percepts_.at(percept.id())); // TODO
             }
           }
           else
           {
             if(robot_agent_->getRightHand() != nullptr)
-            {
-              percepts_.at(percept.id()).updatePose(robot_agent_->getRightHand()->pose());
-              percepts_.at(percept.id()).setInHand(robot_agent_->getRightHand());
+            { 
+              percepts_.at(percept.id()).updatePose(robot_agent_->getRightHand()->pose()); // TODO change into transform between hand and prc_obj (i.e. pose of obj in hand frame) <= robot_agent_->getRightHand()->pose()
+              robot_agent_->getRightHand()->putPerceptInHand(&percepts_.at(percept.id())); // TODO
             }
           }
 
@@ -149,25 +149,26 @@ bool Pr2GripperPerceptionModule::perceptionCallback(const pr2_msgs::PressureStat
       if((pressure_diff_left < -pressure_threshold_) && (pressure_diff_right < -pressure_threshold_))
       {
         has_picked_ = false;
-        // percepts_.at(current_obj_id_).unsetPose();
-        percepts_.at(current_obj_id_).setUnseen();
-        if(percepts_.at(current_obj_id_).isInHand())
-          percepts_.at(current_obj_id_).removeFromHand();
+        // percepts_.at(current_prc_obj_id_).unsetPose();
+        percepts_.at(current_prc_obj_id_).setUnseen();
+        auto hand = percepts_.at(current_prc_obj_id_).getHandIn();
+        if(percepts_.at(current_prc_obj_id_).isInHand())
+          hand->removePerceptFromHand(current_prc_obj_id_);
         
-        current_obj_id_ = "";
-        obj_id_++;
+        current_prc_obj_id_ = "";
+        prc_obj_id_++;
       }
       else
       {
         if(side_ == PR2_GRIPPER_LEFT)
           {
             if(robot_agent_->getLeftHand() != nullptr)
-              percepts_.at(percepts_.at(current_obj_id_).id()).updatePose(robot_agent_->getLeftHand()->pose());
+              percepts_.at(percepts_.at(current_prc_obj_id_).id()).updatePose(robot_agent_->getLeftHand()->pose());
           }
           else
           {
             if(robot_agent_->getRightHand() != nullptr)
-              percepts_.at(percepts_.at(current_obj_id_).id()).updatePose(robot_agent_->getRightHand()->pose());
+              percepts_.at(percepts_.at(current_prc_obj_id_).id()).updatePose(robot_agent_->getRightHand()->pose());
           }
       }
       
