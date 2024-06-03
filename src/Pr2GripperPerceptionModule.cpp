@@ -153,7 +153,6 @@ namespace owds
         if ((pressure_diff_left < -pressure_threshold_) && (pressure_diff_right < -pressure_threshold_))
         {
           has_picked_ = false;
-          // percepts_.at(current_prc_obj_id_).unsetPose();
           percepts_.at(current_prc_obj_id_).setUnseen();
           auto hand = percepts_.at(current_prc_obj_id_).getHandIn();
 
@@ -162,7 +161,6 @@ namespace owds
           if (percepts_.at(current_prc_obj_id_).isInHand())
           {
             percepts_.at(current_prc_obj_id_).removeFromHand();
-            // hand->removePerceptFromHand(current_prc_obj_id_);
             std::cout << "remove from hand => " << percepts_.at(current_prc_obj_id_).isInHand() << std::endl;
           }
           else
