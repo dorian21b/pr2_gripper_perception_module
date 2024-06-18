@@ -113,7 +113,7 @@ namespace owds
             Percept<Object> percept(current_prc_obj_id_, false);
             Shape_t shape;
             shape.type = SHAPE_CUBE;
-            shape.scale.fill(dist / 2.);
+            shape.scale.fill(dist);
             percept.setShape(shape);
             // we can not take the mass from the ontology since the percept object does not exist in (fake id)
             percept.setSeen();
