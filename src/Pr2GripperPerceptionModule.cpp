@@ -192,7 +192,7 @@ namespace owds
     double *right_rot = right_tip_link_state.m_worldLinkFrameOrientation;
     Pose right_tip_pose({right_pos[0], right_pos[1], right_pos[2]}, {right_rot[0], right_rot[1], right_rot[2], right_rot[3]});
 
-    return left_tip_pose.distanceTo(right_tip_pose);
+    return left_tip_pose.distanceTo(right_tip_pose) - 0.0275; // 0.0275 correspond to grippers offset
   }
 
 } // namespace owds
