@@ -138,8 +138,6 @@ namespace owds
               percepts_.at(current_prc_obj_id_).updatePose(Pose()); // meaning the object is at the centrer of the hand
             }
             has_picked_ = true;
-            std::cout << "###### create new Gripper percept " << current_prc_obj_id_
-                      << ", pose = " << percepts_.at(current_prc_obj_id_).pose() << std::endl;
 
             return true;
           }
@@ -149,22 +147,14 @@ namespace owds
       }
       else
       {
-        std::cout << pressure_diff_left << " : " << pressure_diff_right << " < " << -pressure_threshold_ << std::endl;
         if ((pressure_diff_left < -pressure_threshold_) && (pressure_diff_right < -pressure_threshold_))
         {
           has_picked_ = false;
           percepts_.at(current_prc_obj_id_).setUnseen();
           auto hand = percepts_.at(current_prc_obj_id_).getHandIn();
 
-          std::cout << "########################## release detected !!!!" << std::endl;
-
           if (percepts_.at(current_prc_obj_id_).isInHand())
-          {
             percepts_.at(current_prc_obj_id_).removeFromHand();
-            std::cout << "remove from hand => " << percepts_.at(current_prc_obj_id_).isInHand() << std::endl;
-          }
-          else
-            std::cout << "--> percept inot in hand" << std::endl;
 
           current_prc_obj_id_ = "";
           prc_obj_id_++;
@@ -193,8 +183,8 @@ namespace owds
   double Pr2GripperPerceptionModule::getGripperDistance()
   {
     b3LinkState left_tip_link_state = bullet_client_->getLinkState(robot_bullet_id_, pr2_left_tip_bullet_id_);
-    double *left_pos = left_tip_link_state.m_worldLinkFramePosition;
-    double *left_rot = left_tip_link_state.m_worldLinkFrameOrientation;
+    double* left_pos = left_tip_link_state.m_worldLinkFramePosition;
+    double* left_rot = left_tip_link_state.m_worldLinkFrameOrientation;
     Pose left_tip_pose({left_pos[0], left_pos[1], left_pos[2]}, {left_rot[0], left_rot[1], left_rot[2], left_rot[3]});
 
     b3LinkState right_tip_link_state = bullet_client_->getLinkState(robot_bullet_id_, pr2_right_tip_bullet_id_);
